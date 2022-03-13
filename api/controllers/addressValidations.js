@@ -57,7 +57,7 @@ const constructValidatedAddress = (results) => {
     address_line_one: formattedStreetAddress,
     city: formattedCity,
     state: formattedState,
-    zip: formattedZip,
+    zip_code: formattedZip,
     latitude,
     longitude,
   };

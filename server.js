@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import express, { json } from "express";
 
 import {
+  standardizeAddress,
   validateAddress,
   isAddressRequestValid,
 } from "./api/controllers/addressValidations.js";
@@ -32,33 +33,49 @@ app.post("/addressValidations", async (req, res) => {
     return res.status(400).send("Invalid request format");
   }
   const responseList = [];
-  for (let address in addressList) {
+  for (let addressObj in addressList) {
+    const address = {
+      addressLineOne: addressList[addressObj].address_line_one,
+      city: addressList[addressObj].city,
+      state: addressList[addressObj].state,
+      zipCode: addressList[addressObj].zip_code,
+    };
     let response = {};
-    const isValidRequest = isAddressRequestValid(addressList[address]);
+    const isValidRequest = isAddressRequestValid(address);
     if (!isValidRequest) {
       response.status = 400;
       response.body = {
-        error: "Invalid request",
+        error: "Missing required parameters",
       };
     } else {
-      const entry = await cacheLookup(addressList[address]);
+      const standardizedAddress = standardizeAddress(address);
+      const entry = await cacheLookup(standardizedAddress);
       if (entry) {
         response.status = 200;
         response.body = {
-          address_line_one: entry.address_line_one,
+          address_line_one: entry.addressLineOne,
           city: entry.city,
           state: entry.state,
-          zip_code: entry.zip_code,
+          zip_code: entry.zipCode,
           latitude: entry.latitude,
           longitude: entry.longitude,
         };
       } else {
-        const validatedAddress = await validateAddress(addressList[address]);
+        const validatedAddress = await validateAddress(address);
         const isAddressValid = Object.keys(validatedAddress).length > 0;
         if (isAddressValid) {
-          await cacheInsert(validatedAddress);
+          const standardizedValidatedAddress =
+            standardizeAddress(validatedAddress);
+          await cacheInsert(standardizedValidatedAddress);
           response.status = 200;
-          response.body = validatedAddress;
+          response.body = {
+            address_line_one: standardizedValidatedAddress.addressLineOne,
+            city: standardizedValidatedAddress.city,
+            state: standardizedValidatedAddress.state,
+            zip_code: standardizedValidatedAddress.zipCode,
+            latitude: standardizedValidatedAddress.latitude,
+            longitude: standardizedValidatedAddress.longitude,
+          };
         } else {
           response.status = 404;
           response.body = { error: "Address not found" };

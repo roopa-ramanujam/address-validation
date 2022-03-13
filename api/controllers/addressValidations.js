@@ -4,11 +4,23 @@ import { fieldExists } from "../../utils.js";
 
 const isAddressRequestValid = (address) => {
   return (
-    fieldExists(address, "address_line_one") &&
+    fieldExists(address, "addressLineOne") &&
     fieldExists(address, "city") &&
     fieldExists(address, "state") &&
-    fieldExists(address, "zip_code")
+    fieldExists(address, "zipCode")
   );
+};
+
+const standardizeAddress = (address) => {
+  const { addressLineOne, city, state, zipCode, latitude, longitude } = address;
+  return {
+    addressLineOne: addressLineOne.toUpperCase(),
+    city: city.toUpperCase(),
+    state: state.toUpperCase(),
+    zipCode: zipCode.toUpperCase(),
+    latitude,
+    longitude,
+  };
 };
 
 const validateAddress = async (address) => {
@@ -16,13 +28,13 @@ const validateAddress = async (address) => {
     params: {
       key: process.env.GOOGLE_API_KEY,
       address:
-        address.address_line_one +
+        address.addressLineOne +
         " " +
         address.city +
         " " +
         address.state +
         " " +
-        address.zip_code,
+        address.zipCode,
     },
   };
   const client = new Client();
@@ -50,7 +62,7 @@ const constructValidatedAddress = (inputAddress, results) => {
   const formattedAddressArr = results.formatted_address.split(", ");
   const validatedStreetAddress = findMostSimilarAddressComponent(
     formattedAddressArr,
-    inputAddress.address_line_one
+    inputAddress.addressLineOne
   );
   const validatedCity = findMostSimilarAddressComponent(
     formattedAddressArr,
@@ -64,10 +76,10 @@ const constructValidatedAddress = (inputAddress, results) => {
   const latitude = results.geometry.location.lat;
   const longitude = results.geometry.location.lng;
   return {
-    address_line_one: validatedStreetAddress,
+    addressLineOne: validatedStreetAddress,
     city: validatedCity,
     state: validatedState,
-    zip_code: validatedZip,
+    zipCode: validatedZip,
     latitude,
     longitude,
   };
@@ -92,4 +104,4 @@ const findAddressComponent = (addressComponents, targetString) => {
   return addressField;
 };
 
-export { validateAddress, isAddressRequestValid };
+export { standardizeAddress, validateAddress, isAddressRequestValid };

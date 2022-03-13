@@ -1,9 +1,11 @@
 import { app } from "../server.js";
 import chai, { expect } from "chai";
 import sinon from "sinon";
+import proxyquire from "proxyquire";
 import chaiHttp from "chai-http";
 
-import * as addressValidations from "../api/controllers/addressValidations.js";
+import { cacheLookup, cacheInsert } from "../cache/addressCache.js";
+import { validateAddress } from "../api/controllers/addressValidations.js";
 
 describe("Bulk address validation endpoint request validation", () => {
   it("should return http status code 207 - multipart response - if the overall request is valid", async () => {
@@ -37,7 +39,10 @@ describe("Bulk address validation endpoint request validation", () => {
       .send(addresses);
     expect(res).to.have.status(207);
     expect(res.body[0]).to.have.property("status", 400);
-    expect(res.body[0].body).to.have.property("error", "Invalid request");
+    expect(res.body[0].body).to.have.property(
+      "error",
+      "Missing required parameters"
+    );
   });
   it("should return a 400 error if the request is not an array format", async () => {
     let addresses = {
@@ -119,4 +124,33 @@ describe("Bulk address validation endpoint response validation", () => {
   // should return 404 in multipart response if validateAddress call returns empty
   // should return 200 in multipart response if validateAddress call returns object
   // should return multipart response matching number of requests sent in array
+  // it("should not call validateAddress or cacheInsert if cacheLookup return value is not null", async () => {
+  //   let addresses = [
+  //     {
+  //       address_line_one: "620 Atlantic Ave",
+  //       city: "Brooklyn",
+  //       state: "NY",
+  //       zip_code: "11217",
+  //     },
+  //   ];
+  //   chai.use(chaiHttp);
+  //   const validateAddressSpy = sinon.spy(validateAddressSpy);
+  //   const cacheInsertSpy = sinon.spy(cacheInsert);
+  //   sinon.stub(addressCache, 'cacheLookup').returns({
+  //     id: "someId",
+  //     address_line_one: "620 Atlantic Ave",
+  //     city: "Brooklyn",
+  //     state: "NY",
+  //     zip_code: "11217",
+  //     latitude: "42.00",
+  //     longitude: "73.00"
+  //   })
+  //   const res = await chai
+  //     .request(app)
+  //     .post("../api/controllers/addressValidations.js")
+  //     .send(addresses);
+  //   expect(res).to.have.status(207);
+  //   expect(validateAddressSpy).not.to.be.called();
+  //   expect(cacheInsertSpy).not.to.be.called();
+  // });
 });

@@ -32,8 +32,8 @@ HTTP 207 Multi-part response with the status and response body for each address 
   {
     "status": 200,
     "body": {
-      "address_line_one": "1 World Trade Center",
-      "city": "New York",
+      "address_line_one": "1 WORLD TRADE CENTER",
+      "city": "NEW YORK",
       "state": "NY",
       "zip": "10007",
       "latitude": 40.7133024,
@@ -57,7 +57,7 @@ HTTP 207 Multi-part response with the status and response body for each address 
 
 ## Dependencies:
 
-1. Google GeoCoding API
+1. Google GeoCoding API for address validation and geolocation
 2. MongoDB for cache
 3. Mocha/Chai for unit testing
 
@@ -66,9 +66,10 @@ HTTP 207 Multi-part response with the status and response body for each address 
 1. US-based addresses only
 2. Max 5 entries in request
 3. Returns valid address even if partial match according to geocoding API
+4. Input address must match cache entry (validated address) exactly to return cache hit
 
 ## Todo
 
-1. Preprocessing on request address to ensure that cache lookup would match despite differences (e.g. sending 620 Atlantic Avenue should still match against a cached entry 620 Atlantic Ave)
+1. Preprocessing on request address to ensure that cache lookup would match despite differences (e.g. sending 620 Atlantic Avenue should still match against a cached entry 620 Atlantic Ave). This would require some data on common address terms that are synonyms and mapping the request addresses to a standardized value.
 2. Evict entries from cache after certain period of time
 3. Additional unit tests

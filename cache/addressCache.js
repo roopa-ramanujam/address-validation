@@ -2,7 +2,10 @@ import Address from "../models/Address.js";
 import { routeMapping, stateMapping } from "../routeMapping.js";
 
 const cacheLookup = async (address) => {
-  const addressLineOne = standardizeForLookup(address.addressLineOne, routeMapping);
+  const addressLineOne = standardizeForLookup(
+    address.addressLineOne,
+    routeMapping
+  );
   const state = standardizeForLookup(address.state, stateMapping);
   const result = await Address.findOne({
     addressLineOne: addressLineOne,
@@ -25,8 +28,8 @@ const standardizeForLookup = (addressComponent, mapping) => {
     if (component.includes(key)) {
       component = component.replace(key, mapping[key]);
     }
-  })
+  });
   return component;
-}
+};
 
 export { cacheLookup, cacheInsert };

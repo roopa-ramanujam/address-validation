@@ -1,8 +1,8 @@
 const routeMapping = {
   AVENUE: "AVE",
   BOULEVARD: "BLVD",
-  CENTER: "CTR",
   CIRCLE: "CIR",
+  CTR: "CENTER",
   COURT: "CT",
   DRIVE: "DR",
   EXPRESSWAY: "EXPY",
@@ -13,7 +13,6 @@ const routeMapping = {
   PARKWAY: "PKWY",
   PLACE: "PL",
   ROAD: "RD",
-  SQUARE: "SQ",
   STREET: "ST",
   TERRACE: "TER",
   TRAIL: "TRL",

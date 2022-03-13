@@ -4,10 +4,12 @@ import express, { json } from "express";
 
 import {
   validateAddress,
-  isRequestValid,
+  isAddressRequestValid,
 } from "./api/controllers/addressValidations.js";
 
 import { cacheLookup, cacheInsert } from "./cache/addressCache.js";
+
+import { isArray } from "./utils.js";
 
 dotenv.config();
 
@@ -22,10 +24,17 @@ app.route("/").get(function (req, res) {
 
 app.post("/addressValidations", async (req, res) => {
   const addressList = req.body;
+  if (
+    !isArray(addressList) ||
+    addressList.length === 0 ||
+    addressList.length > 5
+  ) {
+    return res.status(400).send("Invalid request format");
+  }
   const responseList = [];
   for (let address in addressList) {
     let response = {};
-    const isValidRequest = isRequestValid(addressList[address]);
+    const isValidRequest = isAddressRequestValid(addressList[address]);
     if (!isValidRequest) {
       response.status = 400;
       response.body = {
@@ -47,7 +56,7 @@ app.post("/addressValidations", async (req, res) => {
         const validatedAddress = await validateAddress(addressList[address]);
         const isAddressValid = Object.keys(validatedAddress).length > 0;
         if (isAddressValid) {
-          const insertRes = await cacheInsert(validatedAddress);
+          await cacheInsert(validatedAddress);
           response.status = 200;
           response.body = validatedAddress;
         } else {

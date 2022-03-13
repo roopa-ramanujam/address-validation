@@ -23,6 +23,8 @@
     "express": "^4.17.3",
     "mocha": "^9.2.2",
     "mongoose": "^6.2.6",
-    "prettier": "^2.5.1"
+    "prettier": "^2.5.1",
+    "sinon": "^13.0.1",
+    "string-similarity": "^4.0.4"
   }
 }

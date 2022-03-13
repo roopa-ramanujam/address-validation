@@ -1,7 +1,6 @@
 import Address from "../models/Address.js";
 
 const cacheLookup = async (address) => {
-  let entry = {};
   const result = await Address.findOne({
     address_line_one: address.address_line_one,
     city: address.city,

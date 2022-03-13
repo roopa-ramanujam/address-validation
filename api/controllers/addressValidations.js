@@ -1,16 +1,14 @@
+import { findBestMatch } from "string-similarity";
 import { Client } from "@googlemaps/google-maps-services-js";
+import { fieldExists } from "../../utils.js";
 
-const isRequestValid = (address) => {
+const isAddressRequestValid = (address) => {
   return (
     fieldExists(address, "address_line_one") &&
     fieldExists(address, "city") &&
     fieldExists(address, "state") &&
     fieldExists(address, "zip_code")
   );
-};
-
-const fieldExists = (obj, key) => {
-  return key in obj;
 };
 
 const validateAddress = async (address) => {
@@ -32,7 +30,11 @@ const validateAddress = async (address) => {
     .geocode(args)
     .then((gcResponse) => {
       if (gcResponse.data.results.length > 0) {
-        return constructValidatedAddress(gcResponse.data.results);
+        const validatedAddress = constructValidatedAddress(
+          address,
+          gcResponse.data.results[0]
+        );
+        return validatedAddress;
       } else {
         return {};
       }
@@ -43,23 +45,51 @@ const validateAddress = async (address) => {
   return validatedAddress;
 };
 
-const constructValidatedAddress = (results) => {
-  const formattedAddress = results[0].formatted_address;
-  const formattedAddressArr = formattedAddress.split(", ");
-  const formattedStreetAddress = formattedAddressArr[0];
-  const formattedCity = formattedAddressArr[1];
-  const formattedState = formattedAddressArr[2].split(" ")[0];
-  const formattedZip = formattedAddressArr[2].split(" ")[1];
-  const latitude = results[0].geometry.location.lat;
-  const longitude = results[0].geometry.location.lng;
+const constructValidatedAddress = (inputAddress, results) => {
+  const addressComponents = results.address_components;
+  const formattedAddressArr = results.formatted_address.split(", ");
+  const validatedStreetAddress = findMostSimilarAddressComponent(
+    formattedAddressArr,
+    inputAddress.address_line_one
+  );
+  const validatedCity = findMostSimilarAddressComponent(
+    formattedAddressArr,
+    inputAddress.city
+  );
+  const validatedState = findAddressComponent(
+    addressComponents,
+    "administrative_area_level_1"
+  );
+  const validatedZip = findAddressComponent(addressComponents, "postal_code");
+  const latitude = results.geometry.location.lat;
+  const longitude = results.geometry.location.lng;
   return {
-    address_line_one: formattedStreetAddress,
-    city: formattedCity,
-    state: formattedState,
-    zip_code: formattedZip,
+    address_line_one: validatedStreetAddress,
+    city: validatedCity,
+    state: validatedState,
+    zip_code: validatedZip,
     latitude,
     longitude,
   };
 };
 
-export { validateAddress, isRequestValid };
+const findMostSimilarAddressComponent = (
+  addressComponentsArray,
+  addressComponentString
+) => {
+  const matches = findBestMatch(addressComponentString, addressComponentsArray);
+  return matches.bestMatch.target;
+};
+
+const findAddressComponent = (addressComponents, targetString) => {
+  let addressField = "";
+  addressComponents.forEach((component) => {
+    if (component.types.includes(targetString)) {
+      addressField = component.short_name;
+      return;
+    }
+  });
+  return addressField;
+};
+
+export { validateAddress, isAddressRequestValid };

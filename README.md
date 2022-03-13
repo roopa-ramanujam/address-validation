@@ -70,6 +70,6 @@ HTTP 207 Multi-part response with the status and response body for each address 
 
 ## Todo
 
-1. Preprocessing on request address to ensure that cache lookup would match despite differences (e.g. sending 620 Atlantic Avenue should still match against a cached entry 620 Atlantic Ave). This would require some data on common address terms that are synonyms and mapping the request addresses to a standardized value.
+1. Preprocessing on request address to ensure that cache lookup would match despite differences (e.g. sending 620 Atlantic Avenue should still match against a cached entry 620 Atlantic Ave). Basic mapping of most common standardizations available for now.
 2. Evict entries from cache after certain period of time
 3. Additional unit tests

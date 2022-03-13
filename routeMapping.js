@@ -1,0 +1,36 @@
+const routeMapping = 
+    {
+    "AVENUE" : "AVE",
+    "BOULEVARD" : "BLVD",
+    "CENTER" : "CTR",
+    "CIRCLE" : "CIR",
+    "COURT" : "CT",
+    "DRIVE" : "DR",
+    "EXPRESSWAY" : "EXPY",
+    "HEIGHTS" : "HTS",
+    "HIGHWAY" : "HWY",
+    "JUNCTION" : "JCT",
+    "LANE" : "LN",
+    "PARKWAY" : "PKWY",
+    "PLACE" : "PL",
+    "ROAD" : "RD",
+    "SQUARE" : "SQ",
+    "STREET" : "ST",
+    "TERRACE" : "TER",
+    "TRAIL" : "TRL",
+    "TURNPIKE" : "TPKE",
+    "VALLEY" : "VLY",
+    "APARTMENT" : "APT",
+    "ROOM" : "RM",
+    "SUITE" : "STE",
+    "NORTH" : "N",
+    "EAST" : "E",
+    "SOUTH" : "S",
+    "WEST" : "W",
+    "NORTHEAST" : "NE",
+    "NORTHWEST" : "NW",
+    "SOUTHEAST" : "SE",
+    "SOUTHWEST" : "SW"
+}
+
+export { routeMapping }

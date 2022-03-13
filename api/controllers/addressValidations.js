@@ -32,7 +32,6 @@ const validateAddress = async (address) => {
     .geocode(args)
     .then((gcResponse) => {
       if (gcResponse.data.results.length > 0) {
-        console.log(gcResponse.data.results);
         return constructValidatedAddress(gcResponse.data.results);
       } else {
         return {};

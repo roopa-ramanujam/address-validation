@@ -16,6 +16,10 @@ const app = express();
 
 app.use(json());
 
+app.route("/").get(function (req, res) {
+  res.sendFile(process.cwd() + "/index.html");
+});
+
 app.post("/addressValidations", async (req, res) => {
   const addressList = req.body;
   const responseList = [];
@@ -68,3 +72,5 @@ db.once("open", function () {
 });
 
 app.listen(port);
+
+export { app };

@@ -1,12 +1,13 @@
 import Address from "../models/Address.js";
-import { routeMapping } from "../routeMapping.js";
+import { routeMapping, stateMapping } from "../routeMapping.js";
 
 const cacheLookup = async (address) => {
-  const addressLineOne = standardizeRouteForLookup(address.addressLineOne);
+  const addressLineOne = standardizeForLookup(address.addressLineOne, routeMapping);
+  const state = standardizeForLookup(address.state, stateMapping);
   const result = await Address.findOne({
     addressLineOne: addressLineOne,
     city: address.city,
-    state: address.state,
+    state: state,
     zipCode: address.zipCode,
   });
   return result;
@@ -18,14 +19,14 @@ const cacheInsert = async (address) => {
   return result;
 };
 
-const standardizeRouteForLookup = (addressLineOne) => {
-  let streetAddress = addressLineOne;
-  Object.keys(routeMapping).filter((key) => {
-    if (streetAddress.includes(key)) {
-      streetAddress = streetAddress.replace(key, routeMapping[key]);
+const standardizeForLookup = (addressComponent, mapping) => {
+  let component = addressComponent;
+  Object.keys(mapping).filter((key) => {
+    if (component.includes(key)) {
+      component = component.replace(key, mapping[key]);
     }
   })
-  return streetAddress;
+  return component;
 }
 
 export { cacheLookup, cacheInsert };

@@ -66,10 +66,10 @@ HTTP 207 Multi-part response with the status and response body for each address 
 1. US-based addresses only
 2. Max 5 entries in request
 3. Returns valid address even if partial match according to geocoding API
-4. Input address must match cache entry (validated address) exactly to return cache hit
+4. Input address must match cache entry (validated address) closely to return cache hit
 
 ## Todo
 
-1. Preprocessing on request address to ensure that cache lookup would match despite differences (e.g. sending 620 Atlantic Avenue should still match against a cached entry 620 Atlantic Ave). Basic mapping of most common standardizations available for now.
+1. Further preprocessing on request address to ensure that cache lookup would match despite differences in spelling or syntax. Basic mapping of most common standardizations for routes and states available for now.
 2. Evict entries from cache after certain period of time
 3. Additional unit tests

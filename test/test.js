@@ -21,7 +21,7 @@ describe("Bulk address validation endpoint request validation", () => {
     chai.use(chaiHttp);
     const res = await chai
       .request(app)
-      .post("/addressValidations")
+      .post("/api/addressValidations")
       .send(addresses);
     expect(res).to.have.status(207);
   });
@@ -36,7 +36,7 @@ describe("Bulk address validation endpoint request validation", () => {
     chai.use(chaiHttp);
     const res = await chai
       .request(app)
-      .post("/addressValidations")
+      .post("/api/addressValidations")
       .send(addresses);
     expect(res).to.have.status(207);
     expect(res.body[0]).to.have.property("status", 400);
@@ -55,7 +55,7 @@ describe("Bulk address validation endpoint request validation", () => {
     chai.use(chaiHttp);
     const res = await chai
       .request(app)
-      .post("/addressValidations")
+      .post("/api/addressValidations")
       .send(addresses);
     expect(res).to.have.status(400);
   });
@@ -64,7 +64,7 @@ describe("Bulk address validation endpoint request validation", () => {
     chai.use(chaiHttp);
     const res = await chai
       .request(app)
-      .post("/addressValidations")
+      .post("/api/addressValidations")
       .send(addresses);
     expect(res).to.have.status(400);
   });
@@ -111,7 +111,7 @@ describe("Bulk address validation endpoint request validation", () => {
     chai.use(chaiHttp);
     const res = await chai
       .request(app)
-      .post("/addressValidations")
+      .post("/api/addressValidations")
       .send(addresses);
     expect(res).to.have.status(400);
   });

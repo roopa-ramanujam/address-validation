@@ -1,6 +1,6 @@
 # Bulk Address Validation
 
-- Endpoint can be accessed at https://address-validation-api.herokuapp.com/addressValidations
+- Endpoint can be accessed at https://address-validation-api.herokuapp.com/api/addressValidations
 
 ## Features
 

@@ -23,7 +23,7 @@ app.route("/").get(function (req, res) {
   res.sendFile(process.cwd() + "/index.html");
 });
 
-app.post("/addressValidations", async (req, res) => {
+app.post("/api/addressValidations", async (req, res) => {
   const addressList = req.body;
   if (
     !isArray(addressList) ||
